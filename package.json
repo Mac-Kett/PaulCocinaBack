@@ -1,0 +1,18 @@
+{
+  "name": "paulcocinaback2",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node ./bin/www",
+    "startDev": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "joi": "^17.4.0",
+    "mongodb": "^3.6.8",
+    "morgan": "~1.9.1"
+  }
+}
