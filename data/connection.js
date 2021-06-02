@@ -1,6 +1,9 @@
 import mongodb from 'mongodb'
+import dotenv from 'dotenv'
+const dotenvconf = dotenv.config();
+
 const MongoClient = mongodb.MongoClient;
-const uri = "mongodb+srv://admin:cDc77Pqkfs5kVKEW@cluster0.nml9c.mongodb.net/PaulCocina_DB?retryWrites=true&w=majority";
+const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
