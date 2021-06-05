@@ -32,11 +32,14 @@ async function updateReceta(receta){
     const clientmongo = await connection.getConnection();
     const query = {_id: new objectId(receta._id)};
     const newvalues = { $set:{
-            name: receta.name,
-            desc: receta.desc,
+            titulo: receta.titulo,
+            descripcion: receta.descripcion,
+            instrucciones:receta.instrucciones,
+            foto:receta.foto,
+            categoria:receta.categoria,
+            ingredientes:receta.ingredientes // no se si va asi!!!
         }
     };
-
     const result = await clientmongo.db('PaulCocina_DB')
                     .collection('recipes')
                     .updateOne(query, newvalues);

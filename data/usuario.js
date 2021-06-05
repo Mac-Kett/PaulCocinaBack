@@ -32,8 +32,8 @@ async function updateUsuario(usuario){
     const clientmongo = await connection.getConnection();
     const query = {_id: new objectId(usuario._id)};
     const newvalues = { $set:{
-            name: usuario.name,
-            desc: usuario.desc,
+            usuario: usuario.usuario,
+            contraseña: usuario.contraseña,
         }
     };
 
