@@ -28,7 +28,7 @@ router.post('/', async (req, res)=>{
       descripcion: joi.string().min(15).required(),
       instrucciones:joi.string().min(20).required(),
       foto:joi.string().min(5).required(), //tiene que ser una url
-      categoria:joi.string().min(5).required(),
+      categoria:joi.string().min(2).required(),
       ingredientes:joi.array().items(joi.string().min(2).required()) // tiene que ser parte de los ingredientes
   });
   const result = schema.validate(req.body);
@@ -41,8 +41,8 @@ router.post('/', async (req, res)=>{
   }    
 });
 
-router.put('/:id', async (req, res)=>{    
-  /** validaciones con joi  **/
+// /recetas/id
+router.put('/:id', async (req, res)=>{
   const schema = joi.object({
     titulo: joi.string().min(5),
     descripcion: joi.string().min(15),
@@ -62,6 +62,7 @@ router.put('/:id', async (req, res)=>{
   }
 });
 
+// /recetas/id
 router.delete('/:id', async (req, res)=>{
   const receta = await dataReceta.getReceta(req.params.id)
   if(!receta){

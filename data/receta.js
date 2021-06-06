@@ -37,7 +37,8 @@ async function updateReceta(receta){
             instrucciones:receta.instrucciones,
             foto:receta.foto,
             categoria:receta.categoria,
-            ingredientes:receta.ingredientes // no se si va asi!!!
+            ingredientes:receta.ingredientes,
+             // no se si va asi!!!
         }
     };
     const result = await clientmongo.db('PaulCocina_DB')

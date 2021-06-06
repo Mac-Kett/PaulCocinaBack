@@ -5,17 +5,13 @@ import joi from "joi";
 
 /* FALTA AUTORIZACION DE USUARIOS*/
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
-
-// /api/usuarios/
+// /usuarios
 router.get("/", async function (req, res, next) {
   let usuarios = await dataUsuario.getUsuarios();
   res.json(usuarios);
 });
 
+// /usuarios/id
 router.get("/:id", async (req, res) => {
   const receta = await dataUsuario.getUsuario(req.params.id);
   if (usuario) {
@@ -40,6 +36,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+// /usuarios/id
 router.put("/:id", async (req, res) => {
   const schema = joi.object({
     usuario: joi.string().email().required(),
@@ -56,6 +53,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// /usuarios/id
 router.delete("/:id", async (req, res) => {
   const usuario = await dataUsuario.getUsuario(req.params.id);
   if (!usuario) {
