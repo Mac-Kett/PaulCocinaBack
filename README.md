@@ -5,6 +5,10 @@ Es una página pensada para un cocinero llamado Paul, quien realiza sus recetas 
 # Casos de uso - Listado de funcionalidades
 
 # Listado de actores/roles
+```
+Administrador
+Usuario
+```
 
 # Listado de entidades principales
 ```
