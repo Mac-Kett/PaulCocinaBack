@@ -12,6 +12,15 @@ router.get('/', async function(req, res, next) {
       res.status(404).send('No hay recetas');
     }
 });
+
+router.get('/byCategory/:categoria', async function(req, res, next) {
+  let recetas = await dataReceta.getRecetasByCategory(req.params.categoria);
+  if(recetas){    
+    res.json(recetas);
+  } else {
+    res.status(404).send('No hay recetas');
+  }
+});
 // /recetas/id
 router.get('/:id', async (req,res)=>{
   const receta = await dataReceta.getReceta(req.params.id);
