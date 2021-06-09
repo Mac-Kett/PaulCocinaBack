@@ -19,6 +19,13 @@ async function getReceta(id){
                     .findOne({_id: new objectId(id)});
     return receta;
 }
+async function getRecetasByCategory(categoria) {
+    const clientmongo = await connection.getConnection();
+    const recetas = await clientmongo.db('PaulCocina_DB')
+                    .collection('recipes')
+                    .find({categoria : categoria}).toArray();
+    return recetas;
+}
 
 async function addReceta(receta){
     const clientmongo = await connection.getConnection();
@@ -56,4 +63,4 @@ async function deleteReceta(id){
 
 }
 
-export default {getRecetas , getReceta, addReceta, updateReceta, deleteReceta};
+export default {getRecetas , getReceta,getRecetasByCategory, addReceta, updateReceta, deleteReceta};

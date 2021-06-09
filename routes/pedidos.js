@@ -1,27 +1,43 @@
 import express from 'express';
 const router = express.Router();
-import dataReceta from '../data/receta.js';
 import joi from 'joi';
+import connection from '../data/connection.js';
+import mongodb from 'mongodb';
+let objectId = mongodb.ObjectId;
+/*
+{
+  nombre: '',
+  apellido: '',
+  direccion: '',
+  altura: '',
+  piso: '',
+  codigoPostal: '',
+  nombreTarjeta: '',
+  numeroTarjeta: '',
+  fechaExpiracion: '',
+  nroCVV: '',
+  localidad:'',
+  provincia:'',
+  pais:'',
+  productos: [],
+  total: 0,
+  estado:'NUEVO'
+}*/
 
-//  /recetas
+//  /pedidos
 router.get('/', async function(req, res, next) {
-    let recetas = await dataReceta.getRecetas();
-    if(recetas){    
-    res.json(recetas);
-    } else {
-      res.status(404).send('No hay recetas');
-    }
-});
-
-router.get('/byCategory/:categoria', async function(req, res, next) {
-  let recetas = await dataReceta.getRecetasByCategory(req.params.categoria);
-  if(recetas){    
-    res.json(recetas);
+  const clientmongo = await connection.getConnection();
+  const pedidos = await clientmongo.db('PaulCocina_DB')
+                  .collection('pedidos')
+                  .find()
+                  .toArray();
+  if(pedidos){    
+    res.json(pedidos);
   } else {
-    res.status(404).send('No hay recetas');
+    res.status(404).send('No hay pedidos');
   }
 });
-// /recetas/id
+
 router.get('/:id', async (req,res)=>{
   const receta = await dataReceta.getReceta(req.params.id);
   if(receta){
@@ -32,22 +48,28 @@ router.get('/:id', async (req,res)=>{
 });
 
 router.post('/', async (req, res)=>{   
-  const schema = joi.object({
-      titulo: joi.string().min(5).required(),
-      descripcion: joi.string().min(15).required(),
-      instrucciones:joi.string().min(20).required(),
-      foto:joi.string().min(5).required(), //tiene que ser una url
-      categoria:joi.string().min(2).required(),
-      ingredientes:joi.array().items(joi.string().min(2).required()) // tiene que ser parte de los ingredientes
+  const clientmongo = await connection.getConnection();
+
+  /*const schema = joi.object({
+    nombre: joi.string().min(5).required(),
+    apellido: joi.string().min(5).required(),
+    direccion: joi.string().min(5).required(),
+    altura: joi.number(),
+    piso: joi.number(),
+    codigoPostal: joi.number(),
+    nombreTarjeta: joi.string(),
   });
   const result = schema.validate(req.body);
+
   if(result.error){
       res.status(400).send(result.error.details[0].message);
-  } else{
-      let receta = req.body;
-      receta = await dataReceta.addReceta(receta);
-      res.json(receta);
-  }    
+  } else{*/
+      let pedido = req.body;
+      pedido = await clientmongo.db('PaulCocina_DB')
+        .collection('pedidos')
+        .insertOne(pedido);
+      res.json(pedido.ops);
+  //}    
 });
 
 // /recetas/id
