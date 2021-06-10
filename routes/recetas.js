@@ -38,6 +38,7 @@ router.post('/', async (req, res)=>{
       instrucciones:joi.string().min(20).required(),
       foto:joi.string().min(5).required(), //tiene que ser una url
       categoria:joi.string().min(2).required(),
+      precio:joi.number().required(),
       ingredientes:joi.array().items(joi.string().min(2).required()) // tiene que ser parte de los ingredientes
   });
   const result = schema.validate(req.body);
