@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+import connection from '../data/connection.js'
 import dataUsuario from "../data/usuario.js";
 import joi from "joi";
 
@@ -18,6 +19,28 @@ router.get("/:id", async (req, res) => {
     res.json(usuario);
   } else {
     res.status(404).send("Usuario no encontrada");
+  }
+});
+
+router.post("/login", async (req, res) => {
+  const schema = joi.object({
+    usuario: joi.string().email().required(),
+    contraseña: joi.string().min(5).required(),
+  });
+  const result = schema.validate(req.body);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+  } else {
+    let usuario = req.body;
+    const clientmongo = await connection.getConnection();
+    const query = await clientmongo.db('PaulCocina_DB')
+                    .collection('users')
+                    .findOne({usuario: usuario.usuario,contraseña:usuario.contraseña});
+    if (query==null) {
+      res.status(403).send("datos no validos");
+    } else {
+      res.status(200).send("AUTORIZED");
+    }
   }
 });
 

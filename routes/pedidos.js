@@ -1,8 +1,9 @@
 import express from 'express';
 const router = express.Router();
 import joi from 'joi';
-import connection from '../data/connection.js';
+import connection from '../data/connection.js'
 import mongodb from 'mongodb';
+import validate from '../data/paymentValidator.js'
 let objectId = mongodb.ObjectId;
 /*
 {
@@ -49,27 +50,32 @@ router.get('/:id', async (req,res)=>{
 
 router.post('/', async (req, res)=>{   
   const clientmongo = await connection.getConnection();
-
-  /*const schema = joi.object({
-    nombre: joi.string().min(5).required(),
-    apellido: joi.string().min(5).required(),
-    direccion: joi.string().min(5).required(),
-    altura: joi.number(),
-    piso: joi.number(),
-    codigoPostal: joi.number(),
-    nombreTarjeta: joi.string(),
-  });
-  const result = schema.validate(req.body);
-
-  if(result.error){
-      res.status(400).send(result.error.details[0].message);
-  } else{*/
-      let pedido = req.body;
-      pedido = await clientmongo.db('PaulCocina_DB')
+  let pedido = req.body;
+    if (pedido.estado=='NUEVO' || pedido.estado=='RECHAZADO') {
+      if (validate.validate(pedido)) { 
+        pedido.estado='APROBADO'
+        pedido.paymentStatus = {
+          estado:"APROBADO",
+          fecha:new Date(),
+          trx:parseInt(Math.random()*1000000),
+          mensaje:"PAGO APROBADO"
+        }
+        let result = await clientmongo.db('PaulCocina_DB')
         .collection('pedidos')
         .insertOne(pedido);
-      res.json(pedido.ops);
-  //}    
+        console.log(result)
+        res.status(200).send(pedido);
+      } else {
+        pedido.estado='RECHAZADO'
+        pedido.paymentStatus = {
+          estado:"RECHAZADO",
+          fecha:new Date(),
+          trx:null,
+          mensaje:"TARJETA DENUNCIADA COMO ROBADA, POR FAVOR DIRIJASE A LA COMISARIA MAS CERCANA"
+        }
+        res.status(200).send(pedido);
+      }
+    }
 });
 
 // /recetas/id
