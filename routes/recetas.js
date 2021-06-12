@@ -59,7 +59,7 @@ router.put('/:id', async (req, res)=>{
     descripcion: joi.string().min(15),
     instrucciones:joi.string().min(20),
     foto:joi.string().min(5), //tiene que ser una url
-    categoria:joi.string().min(5),
+    categoria:joi.string().min(2),
     precio:joi.number().required(),
     ingredientes:joi.array().items(joi.string().min(2)) // tiene que ser parte de los ingredientes
   });
