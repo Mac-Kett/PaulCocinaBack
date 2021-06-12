@@ -41,6 +41,7 @@ router.post('/', async (req, res)=>{
       precio:joi.number().required(),
       ingredientes:joi.array().items(joi.string().min(2).required()) // tiene que ser parte de los ingredientes
   });
+  delete req.body._id
   const result = schema.validate(req.body);
   if(result.error){
       res.status(400).send(result.error.details[0].message);
@@ -59,13 +60,16 @@ router.put('/:id', async (req, res)=>{
     instrucciones:joi.string().min(20),
     foto:joi.string().min(5), //tiene que ser una url
     categoria:joi.string().min(5),
+    precio:joi.number().required(),
     ingredientes:joi.array().items(joi.string().min(2)) // tiene que ser parte de los ingredientes
   });
-  const result = schema.validate(req.body);
+  let item = req.body
+  delete item._id
+  const result = schema.validate(item);
   if(result.error){
       res.status(400).send(result.error.details[0].message);
   } else{
-      let receta = req.body;
+      let receta = item;
       receta._id = req.params.id;
       dataReceta.updateReceta(receta);
       res.json(receta);
