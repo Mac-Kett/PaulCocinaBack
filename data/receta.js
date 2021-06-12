@@ -2,7 +2,6 @@ import connection from './connection.js';
 import mongodb from 'mongodb';
 let objectId = mongodb.ObjectId;
 
-
 async function getRecetas(){
     const clientmongo = await connection.getConnection();
     const recetas = await clientmongo.db('PaulCocina_DB')
@@ -45,6 +44,7 @@ async function updateReceta(receta){
             foto:receta.foto,
             categoria:receta.categoria,
             ingredientes:receta.ingredientes,
+            precio:receta.precio
              // no se si va asi!!!
         }
     };
