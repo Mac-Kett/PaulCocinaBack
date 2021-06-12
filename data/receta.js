@@ -44,7 +44,6 @@ async function updateReceta(receta){
             foto:receta.foto,
             categoria:receta.categoria,
             ingredientes:receta.ingredientes,
-            precio:receta.precio
              // no se si va asi!!!
         }
     };

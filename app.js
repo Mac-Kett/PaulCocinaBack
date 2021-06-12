@@ -9,7 +9,6 @@ import {router as indexRouter} from './routes/index.js';
 import {router as usersRouter} from './routes/users.js';
 import {router as recetasRouter} from './routes/recetas.js';
 import {router as pedidosRouter} from './routes/pedidos.js';
-import {router as ingredientesRouter} from './routes/ingredientes.js';
 
 
 import { fileURLToPath } from 'url';
@@ -31,6 +30,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/recetas', recetasRouter);
 app.use('/pedidos', pedidosRouter);
-app.use('/ingredientes',ingredientesRouter);
+
 
 export {app};
