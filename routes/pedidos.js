@@ -4,6 +4,7 @@ import joi from 'joi';
 import connection from '../data/connection.js'
 import mongodb from 'mongodb';
 import validate from '../data/paymentValidator.js'
+import mailer from '../data/mailer.js';
 let objectId = mongodb.ObjectId;
 /*
 {
@@ -64,6 +65,7 @@ router.post('/', async (req, res)=>{
         .insertOne(pedido);
         console.log(result)
         res.status(200).send(pedido);
+        mailer.sendEmails(pedido)
       } else {
         pedido.estado='RECHAZADO'
         pedido.paymentStatus = {
