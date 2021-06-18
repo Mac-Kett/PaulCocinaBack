@@ -39,6 +39,7 @@ router.post('/', async (req, res)=>{
       foto:joi.string().min(5).required(), //tiene que ser una url
       categoria:joi.string().min(2).required(),
       precio:joi.number().required(),
+      stock:joi.number(),
       ingredientes:joi.array().items(joi.string().min(2).required()) // tiene que ser parte de los ingredientes
   });
   delete req.body._id
@@ -61,6 +62,7 @@ router.put('/:id', async (req, res)=>{
     foto:joi.string().min(5), //tiene que ser una url
     categoria:joi.string().min(2),
     precio:joi.number().required(),
+    stock:joi.number(),
     ingredientes:joi.array().items(joi.string().min(2)) // tiene que ser parte de los ingredientes
   });
   let item = req.body
