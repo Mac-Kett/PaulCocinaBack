@@ -44,8 +44,8 @@ async function updateReceta(receta){
             foto:receta.foto,
             categoria:receta.categoria,
             ingredientes:receta.ingredientes,
-            precio:receta.precio
-             // no se si va asi!!!
+            precio:receta.precio,
+            stock:receta.stock
         }
     };
     const result = await clientmongo.db('PaulCocina_DB')
@@ -62,5 +62,49 @@ async function deleteReceta(id){
     return result;
 
 }
+async function validarStock(productos) {
+    const clientmongo = await connection.getConnection();
+    let ids = []
+    for (let p of productos) {
+        ids.push(new objectId(p.prod_id))
+    }
+    const recetas = await clientmongo.db('PaulCocina_DB')
+    .collection('recipes').find({
+        '_id': { $in: ids}
+    }).toArray();
+    for (let p of productos) {
+        let r = recetas.find((receta)=>receta._id==p.prod_id)
+        if (!r) return false
+        if (isNaN(r.stock)) return false 
+        r.stock = Number(r.stock) - Number(p.quantity)
+        if (r.stock<0) return false
+    }
+    return true
+}
+async function descontarStock(productos) {
+    const clientmongo = await connection.getConnection();
+    let ids = []
+    for (let p of productos) {
+        ids.push(new objectId(p.prod_id))
+    }
+    const recetas = await clientmongo.db('PaulCocina_DB')
+    .collection('recipes').find({
+        '_id': { $in: ids}
+    }).toArray();
 
-export default {getRecetas , getReceta,getRecetasByCategory, addReceta, updateReceta, deleteReceta};
+    for (let p of productos) {
+        let r = recetas.find((receta)=>receta._id==p.prod_id)
+        if (!r) return false
+        r.stock = Number(r.stock) - Number(p.quantity)
+        if (r.stock<0) return false
+
+        await clientmongo.db('PaulCocina_DB')
+        .collection('recipes')
+        .updateOne({_id:r._id}, { $set:{
+            stock:r.stock
+        }});
+    }
+    return true;
+}
+
+export default {getRecetas , getReceta,getRecetasByCategory, addReceta, updateReceta, deleteReceta,validarStock,descontarStock};

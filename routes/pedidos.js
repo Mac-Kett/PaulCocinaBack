@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+import dataReceta from '../data/receta.js';
 import joi from 'joi';
 import connection from '../data/connection.js'
 import mongodb from 'mongodb';
@@ -52,6 +53,18 @@ router.post('/', async (req, res)=>{
   const clientmongo = await connection.getConnection();
   let pedido = req.body;
     if (pedido.estado=='NUEVO' || pedido.estado=='RECHAZADO') {
+      let tieneStock = await dataReceta.validarStock(pedido.productos)
+      if (!tieneStock) {
+        pedido.estado='RECHAZADO'
+        pedido.paymentStatus = {
+          estado:"RECHAZADO",
+          fecha:new Date(),
+          trx:null,
+          mensaje:"No hay stock de uno de los articulos pedidos"
+        }
+        res.status(200).send(pedido);
+        return
+      }
       if (validate.validate(pedido)) { 
         pedido.estado='APROBADO'
         pedido.paymentStatus = {
@@ -65,6 +78,7 @@ router.post('/', async (req, res)=>{
         .insertOne(pedido);
         console.log(result)
         res.status(200).send(pedido);
+        dataReceta.descontarStock(pedido.productos)
         mailer.sendEmails(pedido)
       } else {
         pedido.estado='RECHAZADO'
@@ -72,7 +86,7 @@ router.post('/', async (req, res)=>{
           estado:"RECHAZADO",
           fecha:new Date(),
           trx:null,
-          mensaje:"TARJETA DENUNCIADA COMO ROBADA, POR FAVOR DIRIJASE A LA COMISARIA MAS CERCANA"
+          mensaje:"TARJETA RECHAZADA"
         }
         res.status(200).send(pedido);
       }
