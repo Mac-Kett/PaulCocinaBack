@@ -8,6 +8,7 @@ import cors from 'cors';
 import {router as indexRouter} from './routes/index.js';
 import {router as usersRouter} from './routes/users.js';
 import {router as recetasRouter} from './routes/recetas.js';
+import {router as ingredientesRouter} from './routes/ingredientes.js';
 import {router as pedidosRouter} from './routes/pedidos.js';
 import {router as busquedaRouter} from './routes/barraBusquedas.js';
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/recetas', recetasRouter);
+app.use('/ingredientes', ingredientesRouter);
 app.use('/pedidos', pedidosRouter);
 app.use('/barraBusquedas', busquedaRouter);
 export {app};
