@@ -32,8 +32,7 @@ async function updateIngrediente(ingrediente){
     const clientmongo = await connection.getConnection();
     const query = {_id: new objectId(ingrediente._id)};
     const newvalues = { $set:{
-            name: ingrediente.name,
-            desc: ingrediente.desc,
+            nombre: ingrediente.nombre
         }
     };
 

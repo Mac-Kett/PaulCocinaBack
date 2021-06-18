@@ -21,8 +21,7 @@ router.get('/:id', async (req,res)=>{
 router.post('/', async (req, res)=>{    
 /** validaciones con joi  **/
   const schema = joi.object({
-      name: joi.string().min(5).required(),
-      desc: joi.string().min(5).required(),
+      nombre: joi.string().min(5).required(),
   });
   const result = schema.validate(req.body);
   if(result.error){
@@ -37,8 +36,7 @@ router.post('/', async (req, res)=>{
 router.put('/:id', async (req, res)=>{    
   /** validaciones con joi  **/
   const schema = joi.object({
-    name: joi.string().min(5).required(),
-    desc: joi.string().min(5).required(),
+    nombre: joi.string().min(5).required(),
   });
   const result = schema.validate(req.body);
   if(result.error){
