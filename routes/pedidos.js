@@ -1,7 +1,6 @@
 import express from 'express';
 const router = express.Router();
 import dataReceta from '../data/receta.js';
-import joi from 'joi';
 import connection from '../data/connection.js'
 import mongodb from 'mongodb';
 import validate from '../data/paymentValidator.js'
@@ -52,12 +51,12 @@ router.get('/:id', async (req,res)=>{
 router.post('/', async (req, res)=>{   
   const clientmongo = await connection.getConnection();
   let pedido = req.body;
-    if (pedido.estado=='NUEVO' || pedido.estado=='RECHAZADO') {
+    if (pedido.estado=='Nuevo' || pedido.estado=='Rechazado') {
       let tieneStock = await dataReceta.validarStock(pedido.productos)
       if (!tieneStock) {
-        pedido.estado='RECHAZADO'
+        pedido.estado='Rechazado'
         pedido.paymentStatus = {
-          estado:"RECHAZADO",
+          estado:"Rechazado",
           fecha:new Date(),
           trx:null,
           mensaje:"No hay stock de uno de los articulos pedidos"
@@ -66,12 +65,12 @@ router.post('/', async (req, res)=>{
         return
       }
       if (validate.validate(pedido)) { 
-        pedido.estado='APROBADO'
+        pedido.estado='Aprobado'
         pedido.paymentStatus = {
-          estado:"APROBADO",
+          estado:"Aprobado",
           fecha:new Date(),
           trx:parseInt(Math.random()*1000000),
-          mensaje:"PAGO APROBADO"
+          mensaje:"Pago Aprobado"
         }
         let result = await clientmongo.db('PaulCocina_DB')
         .collection('pedidos')
@@ -81,12 +80,12 @@ router.post('/', async (req, res)=>{
         dataReceta.descontarStock(pedido.productos)
         mailer.sendEmails(pedido)
       } else {
-        pedido.estado='RECHAZADO'
+        pedido.estado='Rechazado'
         pedido.paymentStatus = {
-          estado:"RECHAZADO",
+          estado:"Rechazado",
           fecha:new Date(),
           trx:null,
-          mensaje:"TARJETA RECHAZADA"
+          mensaje:"Tarjeta sin monto para realizar la compra"
         }
         res.status(200).send(pedido);
       }
